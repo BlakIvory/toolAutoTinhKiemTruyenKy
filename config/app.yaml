@@ -1,0 +1,78 @@
+# =====================================================
+# AutoQuestTool - App Config
+# Game: Tình Kiếm Truyền Kỳ
+# =====================================================
+
+# ---------------------------
+# Emulator Settings
+# ---------------------------
+emulator:
+  type: "ldplayer9"                              # ldplayer9 | ldplayer
+  ldplayer_path: "C:/Program Files/ldplayer9box" # Thư mục cài LDPlayer
+  ldconsole_path: ""                             # Để trống nếu dùng ADB fallback
+  instance_id: 0                                 # Index của emulator instance
+  adb_host: "127.0.0.1"
+  adb_port: 5555                                 # Port ADB của LDPlayer (thường 5555 hoặc 5554)
+  width: 1280
+  height: 720
+  dpi: 240
+
+# ---------------------------
+# ADB Settings
+# ---------------------------
+adb:
+  adb_path: ""        # Để trống → tự tìm trong PATH. Hoặc đặt đường dẫn tuyệt đối: "C:/platform-tools/adb.exe"
+  connect_timeout: 10 # giây
+  command_timeout: 30 # giây
+  screenshot_method: "screencap"  # screencap | uiautomator
+
+# ---------------------------
+# Game Settings
+# ---------------------------
+game:
+  package_name: "vn.com.titanstudio.tinhkiem"  # Android package name - cần xác nhận
+  activity_name: ""   # Main activity - để trống nếu chưa biết
+  startup_wait: 15    # giây chờ sau khi start game
+
+# ---------------------------
+# Vision Settings
+# ---------------------------
+vision:
+  default_confidence: 0.85
+  match_method: "TM_CCOEFF_NORMED"  # OpenCV template matching method
+
+# ---------------------------
+# Timing / Timeout
+# ---------------------------
+timing:
+  tap_delay: 0.3        # giây sau mỗi tap
+  swipe_duration: 300   # ms
+  screenshot_interval: 1.0  # giây giữa các lần chụp
+  action_timeout: 15    # giây timeout cho từng action
+  login_timeout: 60     # giây timeout đăng nhập
+  navigation_timeout: 30  # giây timeout navigation
+
+# ---------------------------
+# Retry Settings
+# ---------------------------
+retry:
+  max_attempts: 3
+  delay_between: 2.0   # giây
+
+# ---------------------------
+# Mode
+# ---------------------------
+mode:
+  dry_run: false       # true → block BUY/TRANSFER/LOGOUT
+  mock_adb: false      # true → dùng MockADBController (test không cần emulator)
+  debug_screenshots: true  # Lưu ảnh debug khi có lỗi
+  save_path: "logs/debug"
+
+# ---------------------------
+# Logging
+# ---------------------------
+logging:
+  level: "DEBUG"       # DEBUG | INFO | WARNING | ERROR
+  log_dir: "logs"
+  rotation: "1 day"
+  retention: "7 days"

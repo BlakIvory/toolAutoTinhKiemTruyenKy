@@ -1,0 +1,25 @@
+# =====================================================
+# AutoQuestTool - Shops Config
+# Game: Tình Kiếm Truyền Kỳ
+# =====================================================
+
+shops:
+  - id: "shop_general"
+    name: "Tạp Hóa"
+    npc_id: "shop_general"
+    map: "main_city"
+    items:
+      - id: "item_potion"
+        name: "Thuốc Hồi Máu"
+        quantity: 10
+        max_spend: 1000  # vàng tối đa chi cho item này
+
+  - id: "merchant"
+    name: "Thương Nhân Chợ"
+    npc_id: "merchant"
+    map: "market"
+    items:
+      - id: "item_special"
+        name: "Vật Phẩm Đặc Biệt"
+        quantity: 1
+        max_spend: 5000

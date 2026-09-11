@@ -1,0 +1,85 @@
+# =====================================================
+# AutoQuestTool - UI Coordinates Config
+# Game: Tình Kiếm Truyền Kỳ
+# Resolution chuẩn: 1280x720
+# =====================================================
+# Tất cả tọa độ dựa trên resolution 1280x720.
+# Nếu dùng resolution khác → cấu hình coordinate_normalization trong app.yaml
+
+# ---------------------------
+# Login Screen
+# ---------------------------
+login:
+  username_field:   { x: 640, y: 350 }
+  password_field:   { x: 640, y: 420 }
+  login_button:     { x: 640, y: 490 }
+  server_button:    { x: 640, y: 280 }
+
+# ---------------------------
+# Main Menu / In-game
+# ---------------------------
+main_menu:
+  quest_button:     { x: 100, y: 600 }  # Nút nhiệm vụ
+  map_button:       { x: 200, y: 600 }  # Nút bản đồ
+  bag_button:       { x: 1180, y: 100 } # Túi đồ
+  back_button:      { x: 50, y: 50 }    # Nút quay lại
+
+# ---------------------------
+# Quest UI
+# ---------------------------
+quest:
+  accept_button:    { x: 950, y: 600 }
+  complete_button:  { x: 950, y: 600 }
+  cancel_button:    { x: 640, y: 600 }
+  quest_icon_area:  { x1: 0, y1: 0, x2: 200, y2: 720 }  # ROI sidebar nhiệm vụ
+
+# ---------------------------
+# NPC Interact
+# ---------------------------
+npc:
+  talk_button:      { x: 640, y: 500 }
+  close_button:     { x: 1200, y: 100 }
+
+# ---------------------------
+# Shop
+# ---------------------------
+shop:
+  buy_button:       { x: 900, y: 500 }
+  confirm_button:   { x: 640, y: 450 }
+  close_button:     { x: 1200, y: 100 }
+  quantity_field:   { x: 640, y: 380 }
+
+# ---------------------------
+# Gold Transfer
+# ---------------------------
+gold_transfer:
+  transfer_button:  { x: 640, y: 500 }
+  amount_field:     { x: 640, y: 380 }
+  confirm_button:   { x: 720, y: 450 }
+
+# ---------------------------
+# Popup / Dialog
+# ---------------------------
+popup:
+  ok_button:        { x: 640, y: 450 }
+  cancel_button:    { x: 480, y: 450 }
+  close_button:     { x: 1150, y: 80 }
+
+# ---------------------------
+# Minimap
+# ---------------------------
+minimap:
+  area:             { x1: 1100, y1: 0, x2: 1280, y2: 200 }  # ROI minimap
+
+# ---------------------------
+# ROI Regions (cho Vision Engine)
+# ---------------------------
+regions:
+  full_screen:      { x1: 0, y1: 0, x2: 1280, y2: 720 }
+  top_bar:          { x1: 0, y1: 0, x2: 1280, y2: 100 }
+  bottom_bar:       { x1: 0, y1: 600, x2: 1280, y2: 720 }
+  left_panel:       { x1: 0, y1: 0, x2: 200, y2: 720 }
+  right_panel:      { x1: 1080, y1: 0, x2: 1280, y2: 720 }
+  center:           { x1: 400, y1: 200, x2: 880, y2: 520 }
+  quest_sidebar:    { x1: 0, y1: 200, x2: 220, y2: 700 }
+  bottom_right:     { x1: 900, y1: 550, x2: 1280, y2: 720 }

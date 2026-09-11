@@ -1,0 +1,16 @@
+accounts.yaml
+*.log
+runtime/state.json
+runtime/autoquest.db
+logs/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+*.spec
+logs/debug/

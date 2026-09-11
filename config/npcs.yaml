@@ -1,0 +1,45 @@
+# =====================================================
+# AutoQuestTool - NPCs Config
+# Game: Tình Kiếm Truyền Kỳ
+# =====================================================
+
+npcs:
+  - id: "quest_giver_main"
+    name: "Nhiệm Vụ Chính"
+    map: "main_city"
+    coordinate: { x: 640, y: 360 }   # Tọa độ trên màn hình khi đứng gần NPC
+    template: "npc_name_plate"
+    talk_action: "tap"    # tap | approach_and_tap
+    interaction_region: { x1: 500, y1: 250, x2: 780, y2: 500 }
+
+  - id: "banker"
+    name: "Ngân Hàng"
+    map: "main_city"
+    coordinate: { x: 400, y: 350 }
+    template: "npc_name_plate"
+    talk_action: "tap"
+    interaction_region: { x1: 300, y1: 200, x2: 550, y2: 500 }
+
+  - id: "shop_general"
+    name: "Tạp Hóa"
+    map: "main_city"
+    coordinate: { x: 800, y: 400 }
+    template: "npc_name_plate"
+    talk_action: "tap"
+    interaction_region: { x1: 650, y1: 280, x2: 950, y2: 550 }
+
+  - id: "merchant"
+    name: "Thương Nhân"
+    map: "market"
+    coordinate: { x: 640, y: 360 }
+    template: "npc_name_plate"
+    talk_action: "tap"
+    interaction_region: { x1: 500, y1: 250, x2: 780, y2: 500 }
+
+  - id: "quest_npc_1"
+    name: "NPC Nhiệm Vụ"
+    map: "quest_zone_1"
+    coordinate: { x: 640, y: 360 }
+    template: "npc_name_plate"
+    talk_action: "tap"
+    interaction_region: { x1: 500, y1: 250, x2: 780, y2: 500 }

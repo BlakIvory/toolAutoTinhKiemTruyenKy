@@ -1,0 +1,104 @@
+# =====================================================
+# AutoQuestTool - Templates Config
+# Game: Tình Kiếm Truyền Kỳ
+# =====================================================
+# Mỗi template có thể có confidence threshold riêng.
+# Nếu không khai báo confidence → dùng default từ app.yaml (0.85)
+
+templates:
+
+  # ---------------------------
+  # Screens
+  # ---------------------------
+  login_screen:
+    path: "assets/templates/screens/login/login_bg.png"
+    confidence: 0.80
+    region: null  # null = full screen
+
+  ingame_screen:
+    path: "assets/templates/screens/ingame/ingame_bg.png"
+    confidence: 0.80
+    region: "top_bar"
+
+  loading_screen:
+    path: "assets/templates/screens/loading/loading.png"
+    confidence: 0.75
+    region: null
+
+  # ---------------------------
+  # Quest UI
+  # ---------------------------
+  quest_accept_btn:
+    path: "assets/templates/quest/accept/btn_accept.png"
+    confidence: 0.88
+    region: "bottom_right"
+
+  quest_complete_btn:
+    path: "assets/templates/quest/complete/btn_complete.png"
+    confidence: 0.88
+    region: "bottom_right"
+
+  quest_cancel_btn:
+    path: "assets/templates/quest/cancel/btn_cancel.png"
+    confidence: 0.85
+    region: "bottom_bar"
+
+  # Quest type icons
+  quest_icon_npc:
+    path: "assets/templates/quest/accept/icon_npc.png"
+    confidence: 0.82
+    region: "quest_sidebar"
+
+  quest_icon_shop:
+    path: "assets/templates/quest/accept/icon_shop.png"
+    confidence: 0.82
+    region: "quest_sidebar"
+
+  quest_icon_combat:
+    path: "assets/templates/quest/accept/icon_combat.png"
+    confidence: 0.82
+    region: "quest_sidebar"
+
+  # ---------------------------
+  # NPC
+  # ---------------------------
+  npc_talk_btn:
+    path: "assets/templates/npc/btn_talk.png"
+    confidence: 0.85
+    region: "bottom_bar"
+
+  npc_name_plate:
+    path: "assets/templates/npc/name_plate.png"
+    confidence: 0.75
+    region: "center"
+
+  # ---------------------------
+  # Shop
+  # ---------------------------
+  shop_buy_btn:
+    path: "assets/templates/shop/btn_buy.png"
+    confidence: 0.88
+    region: "bottom_right"
+
+  shop_confirm_btn:
+    path: "assets/templates/shop/btn_confirm.png"
+    confidence: 0.90
+    region: "center"
+
+  # ---------------------------
+  # Popup / Dialog
+  # ---------------------------
+  popup_ok_btn:
+    path: "assets/templates/popup/btn_ok.png"
+    confidence: 0.87
+    region: "center"
+
+  popup_close_btn:
+    path: "assets/templates/popup/btn_close.png"
+    confidence: 0.85
+    region: "right_panel"
+
+  generic_confirm_btn:
+    path: "assets/templates/popup/btn_generic_confirm.png"
+    confidence: 0.83
+    region: "center"

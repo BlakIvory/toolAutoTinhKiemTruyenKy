@@ -1,0 +1,42 @@
+# =====================================================
+# AutoQuestTool - Maps Config
+# Game: Tình Kiếm Truyền Kỳ
+# =====================================================
+
+maps:
+  - id: "main_city"
+    name: "Thành Chủ"
+    map_key: "MAIN_CITY"
+    travel_method: "teleport"  # teleport | walk | minimap_click
+    teleport_button: null       # Tọa độ nút teleport (nếu có)
+    npcs:
+      - "quest_giver_main"
+      - "banker"
+      - "shop_general"
+
+  - id: "market"
+    name: "Chợ"
+    map_key: "MARKET"
+    travel_method: "teleport"
+    npcs:
+      - "merchant"
+
+  - id: "quest_zone_1"
+    name: "Khu Nhiệm Vụ 1"
+    map_key: "QUEST_ZONE_1"
+    travel_method: "walk"
+    npcs:
+      - "quest_npc_1"
+
+# Map Navigation graph (từ map nào có thể đến map nào)
+# Dùng cho NavigationEngine
+navigation_graph:
+  main_city:
+    - market
+    - quest_zone_1
+
+  market:
+    - main_city
+
+  quest_zone_1:
+    - main_city

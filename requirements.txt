@@ -1,0 +1,44 @@
+# =======================================
+# AutoQuestTool - Requirements Phase 1
+# Game: Tình Kiếm Truyền Kỳ
+# =======================================
+# Chỉ cài những package thật sự dùng trong Phase 1.
+# KHÔNG cài: paddleocr, pytesseract, Appium-Python-Client
+
+# Computer Vision
+opencv-python>=4.8.0
+
+# Image Processing
+numpy>=1.24.0
+Pillow>=10.0.0
+
+# Config
+PyYAML>=6.0
+
+# Data Validation
+pydantic>=2.0.0
+
+# Logging
+loguru>=0.7.0
+
+# Retry
+tenacity>=8.2.0
+
+# GUI (Phase 1 - có thể skip nếu chỉ chạy CLI)
+PySide6>=6.6.0
+
+# Testing
+pytest>=7.4.0
+pytest-mock>=3.11.0
+
+# -------
+# Phase 2 (OCR) - thêm sau:
+# paddleocr
+# pytesseract
+#
+# Phase 3 (Appium) - thêm khi xác nhận cần:
+# Appium-Python-Client
+#
+# Phase 4 (AI Vision) - thêm khi prototype yêu cầu:
+# ultralytics
+# onnxruntime
