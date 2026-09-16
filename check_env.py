@@ -71,9 +71,14 @@ def check_adb():
 
 def check_ldplayer():
     print(f"\n{BOLD}LDPLAYER:{RESET}")
+    from src.config_loader import ConfigLoader
+    app_cfg = ConfigLoader().load_app()
     paths = [
-        r"C:\Program Files\ldplayer9box",
+        app_cfg.emulator.ldplayer_path,
+        r"D:\LDPlayer\LDPlayer9",
+        r"D:\LDPlayer",
         r"C:\LDPlayer\LDPlayer9",
+        r"C:\Program Files\ldplayer9box",
         r"C:\LDPlayer9",
     ]
     for p in paths:

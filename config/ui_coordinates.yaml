@@ -7,13 +7,26 @@
 # Nếu dùng resolution khác → cấu hình coordinate_normalization trong app.yaml
 
 # ---------------------------
-# Login Screen
+# Emulator Home Screen (1600x900)
+# ---------------------------
+emulator_home:
+  app_drawer_button:    { x: 62, y: 874 }
+
+# ---------------------------
+# Login Screen (1600x900)
 # ---------------------------
 login:
-  username_field:   { x: 640, y: 350 }
-  password_field:   { x: 640, y: 420 }
-  login_button:     { x: 640, y: 490 }
-  server_button:    { x: 640, y: 280 }
+  username_field:       { x: 820, y: 318 }
+  password_field:       { x: 820, y: 417 }
+  login_button:         { x: 834, y: 622 }
+  server_change_button: { x: 1000, y: 125 }
+  server_s1_button:     { x: 1204, y: 206 }
+  server_s2_button:     { x: 814, y: 206 }
+  server_confirm_button: { x: 900, y: 735 }
+  popup_dismiss_button: { x: 771, y: 395 }
+  character_first_slot: { x: 1340, y: 235 }
+  character_enter_btn:  { x: 1425, y: 685 }
+  character_name_field: { x: 370, y: 860 }
 
 # ---------------------------
 # Main Menu / In-game
@@ -83,3 +96,93 @@ regions:
   center:           { x1: 400, y1: 200, x2: 880, y2: 520 }
   quest_sidebar:    { x1: 0, y1: 200, x2: 220, y2: 700 }
   bottom_right:     { x1: 900, y1: 550, x2: 1280, y2: 720 }
+
+# ---------------------------
+# Navigation & Map UI (1600x900)
+# ---------------------------
+navigation:
+  minimap_button:      { x: 1520, y: 100 }
+  map_tab_find_map:    { x: 176, y: 162 }
+  map_tab_find_npc:    { x: 376, y: 161 }
+  map_list_region:     { x1: 75, y1: 250, x2: 465, y2: 865 }
+  map_tuyen_chau:      { x: 115, y: 315 }
+  map_search_input:    { x: 266, y: 222 }
+  map_npc_search_result: { x: 200, y: 285 }
+  map_close_button:    { x: 1519, y: 77 }
+  map_world_button:    { x: 1436, y: 782 }
+  map_confirm_button:  { x: 1015, y: 778 }
+  settings_close_button: { x: 1412, y: 170 }
+  chat_close_button:     { x: 795, y: 105 }
+  arena_close_button:    { x: 1475, y: 120 }
+
+# Commerce-guild quest flow (1600x900)
+commerce_quest:
+  quest_button:          { x: 1404, y: 755 }
+  quest_panel_close:     { x: 1495, y: 95 }
+  npc_name_region:       { x1: 560, y1: 280, x2: 1050, y2: 560 }
+  dialog_options_region: { x1: 180, y1: 520, x2: 1450, y2: 760 }
+  contribute_fallback:   { x: 405, y: 585 }
+  quest_info_region:     { x1: 180, y1: 180, x2: 1450, y2: 760 }
+  buff_button:           { x: 1308, y: 160 }
+  auto_button:           { x: 1308, y: 240 }
+  quest_tracker_region:  { x1: 0, y1: 210, x2: 420, y2: 520 }
+  map_coordinate_x:      { x: 704, y: 778 }
+  map_coordinate_y:      { x: 842, y: 778 }
+  map_coordinate_confirm: { x: 1015, y: 778 }
+  # commerce_chief_cities:
+  #   "Biện Kinh":     { x: 170, y: 182 }
+  #   "Thành Đô":      { x: 237, y: 218 }
+  #   "Tương Dương":   { x: 182, y: 182 }
+  #   "Dương Châu":    { x: 204, y: 196 }
+  #   "Tuyền Châu":    { x: 192, y: 182 }
+  western_merchant_spawns:
+    - { city: "Tuyền Châu", x: 187, y: 191 }
+    - { city: "Biện Kinh", x: 179, y: 184 }
+    - { city: "Thành Đô", x: 224, y: 225 }
+    - { city: "Tương Dương", x: 187, y: 180 } #ok
+    - { city: "Dương Châu", x: 206, y: 194 } # ok
+    - { city: "Đại Lý", x: 178, y: 187 } #ok
+  major_cities:
+    - { name: "Biện Kinh", x: 170, y: 182 }
+    - { name: "Thành Đô", x: 237, y: 218 }
+    - { name: "Tương Dương", x: 182, y: 182 }
+    - { name: "Dương Châu", x: 204, y: 196 }
+    - { name: "Tuyền Châu", x: 192, y: 182 }
+
+# ---------------------------
+# Western Merchant & Shop UI (1600x900)
+# ---------------------------
+shop:
+  dialog_buy_option:     { x: 272, y: 566 }  # Tùy chọn "Đồng ý mua" trong hộp thoại
+  buy_button:            { x: 538, y: 485 }  # Nút "Mua" màu cam trong bảng thông tin
+  confirm_button:        { x: 465, y: 786 }  # Nút "Đồng ý" trong popup số lượng
+  cancel_button:         { x: 663, y: 786 }  # Nút "Rời khỏi" trong popup số lượng
+  close_button:          { x: 702, y: 128 }  # Nút 'X' đóng Tạp hóa
+  inventory_close:       { x: 1577, y: 81 }  # Nút 'X' đóng Hành trang
+  tooltip_title_region:  { x1: 700, y1: 30, x2: 1100, y2: 150 }
+  grid_slots:
+    # Hàng 1
+    - { x: 316, y: 190 }
+    - { x: 397, y: 190 }
+    - { x: 486, y: 190 }
+    - { x: 575, y: 190 }
+    # Hàng 2
+    - { x: 316, y: 279 }
+    - { x: 397, y: 279 }
+    - { x: 486, y: 279 }
+    - { x: 575, y: 279 }
+    # Hàng 3
+    - { x: 316, y: 368 }
+    - { x: 397, y: 368 }
+    - { x: 486, y: 368 }
+    - { x: 575, y: 368 }
+    # Hàng 4
+    - { x: 316, y: 457 }
+    - { x: 397, y: 457 }
+    - { x: 486, y: 457 }
+    - { x: 575, y: 457 }
+    # Hàng 5
+    - { x: 316, y: 546 }
+    - { x: 397, y: 546 }
+    - { x: 486, y: 546 }
+    - { x: 575, y: 546 }

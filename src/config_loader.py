@@ -68,6 +68,7 @@ class ModeConfig(BaseModel):
     mock_adb: bool = False
     debug_screenshots: bool = True
     save_path: str = "logs/debug"
+    commerce_only: bool = True
 
 
 class LoggingConfig(BaseModel):

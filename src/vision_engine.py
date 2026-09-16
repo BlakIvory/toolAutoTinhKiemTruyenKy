@@ -165,6 +165,10 @@ class VisionEngine:
         Nếu frame=None → chụp mới.
         region_override = (x1, y1, x2, y2) để override region trong config.
         """
+        if not self._templates.has(name):
+            logger.debug(f"find_template '{name}': template not loaded, returning not found")
+            return MatchResult(found=False)
+
         if frame is None:
             frame = self._screen.capture()
 
@@ -194,6 +198,10 @@ class VisionEngine:
         max_count: int = 20,
     ) -> List[MatchResult]:
         """Tìm tất cả occurences của template trong frame."""
+        if not self._templates.has(name):
+            logger.debug(f"find_all_templates '{name}': template not loaded, returning empty")
+            return []
+
         if frame is None:
             frame = self._screen.capture()
 
@@ -343,6 +351,8 @@ class VisionEngine:
         frame: Optional[np.ndarray] = None,
     ) -> float:
         """Trả về confidence của best match (dù không đủ threshold)."""
+        if not self._templates.has(name):
+            return 0.0
         if frame is None:
             frame = self._screen.capture()
         tmpl_img, tmpl_cfg = self._templates.get(name)

@@ -8,20 +8,20 @@
 # ---------------------------
 emulator:
   type: "ldplayer9"                              # ldplayer9 | ldplayer
-  ldplayer_path: "C:/Program Files/ldplayer9box" # Thư mục cài LDPlayer
-  ldconsole_path: ""                             # Để trống nếu dùng ADB fallback
-  instance_id: 0                                 # Index của emulator instance
+  ldplayer_path: "D:/LDPlayer/LDPlayer9"         # Thu muc cai LDPlayer
+  ldconsole_path: "D:/LDPlayer/LDPlayer9/ldconsole.exe"  # Tim thay tu Get-Process
+  instance_id: 0                                 # Index cua emulator instance mac dinh
   adb_host: "127.0.0.1"
-  adb_port: 5555                                 # Port ADB của LDPlayer (thường 5555 hoặc 5554)
-  width: 1280
-  height: 720
+  adb_port: 5555                                 # Port ADB của LDPlayer – 5555 (emulator-5554)
+  width: 1600                                   # detected from: adb shell wm size
+  height: 900
   dpi: 240
 
 # ---------------------------
 # ADB Settings
 # ---------------------------
 adb:
-  adb_path: ""        # Để trống → tự tìm trong PATH. Hoặc đặt đường dẫn tuyệt đối: "C:/platform-tools/adb.exe"
+  adb_path: "D:/LDPlayer/LDPlayer9/adb.exe"  # Sử dụng adb của LDPlayer để đồng bộ server/client
   connect_timeout: 10 # giây
   command_timeout: 30 # giây
   screenshot_method: "screencap"  # screencap | uiautomator
@@ -30,7 +30,7 @@ adb:
 # Game Settings
 # ---------------------------
 game:
-  package_name: "vn.com.titanstudio.tinhkiem"  # Android package name - cần xác nhận
+  package_name: "com.titanstudio.tkcm"  # Package name chinh xac (da xac nhan qua adb)
   activity_name: ""   # Main activity - để trống nếu chưa biết
   startup_wait: 15    # giây chờ sau khi start game
 
@@ -45,19 +45,19 @@ vision:
 # Timing / Timeout
 # ---------------------------
 timing:
-  tap_delay: 0.3        # giây sau mỗi tap
-  swipe_duration: 300   # ms
-  screenshot_interval: 1.0  # giây giữa các lần chụp
-  action_timeout: 15    # giây timeout cho từng action
-  login_timeout: 60     # giây timeout đăng nhập
-  navigation_timeout: 30  # giây timeout navigation
+  tap_delay: 0.05       # giây sau mỗi tap (giảm từ 0.1s -> 0.05s)
+  swipe_duration: 150   # ms (giảm từ 180ms -> 150ms)
+  screenshot_interval: 0.2  # giây giữa các lần chụp (giảm từ 0.3s -> 0.2s)
+  action_timeout: 12    # giây timeout cho từng action
+  login_timeout: 45     # giây timeout đăng nhập
+  navigation_timeout: 15  # giây timeout navigation
 
 # ---------------------------
 # Retry Settings
 # ---------------------------
 retry:
   max_attempts: 3
-  delay_between: 2.0   # giây
+  delay_between: 0.5   # giây (giảm từ 0.8s -> 0.5s)
 
 # ---------------------------
 # Mode
@@ -67,6 +67,7 @@ mode:
   mock_adb: false      # true → dùng MockADBController (test không cần emulator)
   debug_screenshots: true  # Lưu ảnh debug khi có lỗi
   save_path: "logs/debug"
+  commerce_only: true  # Chỉ làm nhiệm vụ Thương hội, bỏ nhiệm vụ thường/chính tuyến
 
 # ---------------------------
 # Logging

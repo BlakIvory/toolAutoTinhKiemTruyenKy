@@ -31,6 +31,9 @@ PySide6>=6.6.0
 pytest>=7.4.0
 pytest-mock>=3.11.0
 
+# Lightweight local OCR; used with fuzzy matching because in-game names vary.
+rapidocr-onnxruntime>=1.3.24
+
 # -------
 # Phase 2 (OCR) - thêm sau:
 # paddleocr

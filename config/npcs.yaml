@@ -43,3 +43,12 @@ npcs:
     template: "npc_name_plate"
     talk_action: "tap"
     interaction_region: { x1: 500, y1: 250, x2: 780, y2: 500 }
+
+  - id: "chu_thuong_hoi"
+    name: "Chủ thương hội"
+    map: "cities"
+    coordinate: { x: 800, y: 450 }
+    template: "npc_chu_thuong_hoi"
+    talk_action: "tap"
+    interaction_region: { x1: 400, y1: 200, x2: 1200, y2: 700 }
+

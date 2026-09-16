@@ -15,21 +15,33 @@ import argparse
 import sys
 from pathlib import Path
 
+if hasattr(sys.stdout, "reconfigure"):
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 # Thêm thư mục gốc vào path
 sys.path.insert(0, str(Path(__file__).parent))
 
 
 def run_check_env():
-    """Chạy environment check."""
+    """Chay environment check."""
     import check_env
     check_env.main()
+
+
+def run_launcher():
+    """Mo Launcher GUI chon may ao va khoi dong bot."""
+    from launcher import main as launcher_main
+    launcher_main()
 
 
 def run_bot(args):
     """Khởi động BotController."""
     # Override config từ CLI args
     if args.dry_run:
-        # Patch config trước khi load
         import os
         os.environ["AUTOQUEST_DRY_RUN"] = "true"
 
@@ -38,23 +50,57 @@ def run_bot(args):
         os.environ["AUTOQUEST_MOCK_ADB"] = "true"
 
     from src.bot_controller import BotController
+    from src.state_machine import BotState
 
-    # Patch config nếu dry_run / mock từ CLI
     bot = BotController()
 
     if args.dry_run:
         bot._app_cfg.mode.dry_run = True
-        print("⚠️  DRY RUN mode – BUY/TRANSFER/LOGOUT bị block")
+        print("[DRY RUN] BUY/TRANSFER/LOGOUT bi block")
 
     if args.mock:
-        print("⚠️  MOCK mode – dùng MockADBController")
+        print("[MOCK] Dung MockADBController")
 
-    if args.account:
-        print(f"▶  Chạy account: {args.account}")
-        bot.run_single_account(args.account)
+    if getattr(args, "device", None):
+        bot._adb.set_target_device(args.device)
+        print(f"[DEVICE] Target ADB serial: {args.device}")
+
+    if getattr(args, "instance", None) is not None:
+        bot._target_instance_index = int(args.instance)
+        print(f"[INSTANCE] LDPlayer instance index: {args.instance}")
+
+    if getattr(args, "server", None):
+        bot._target_server = args.server
+        print(f"[SERVER] Game server: {args.server}")
+
+    # --skip-login: bo qua man hinh login (neu da vao game roi)
+    # Bat dau tu START_GAME: tu kiem tra game co mo khong, mo neu chua co
+    # Neu da vao game san → skip login, vao thang GET_QUEST
+    initial_state = BotState.BOOT
+    if args.skip_login:
+        bot._skip_login = True
+        initial_state = BotState.FIND_COMMERCE_CHIEF
+        print("[SKIP LOGIN] Bat dau tim Chu thuong hoi (game dang chay san)")
+
+    if getattr(args, "accounts", ""):
+        account_ids = [value.strip() for value in args.accounts.split(",") if value.strip()]
+        print(f"[ACCOUNTS] Hang doi: {', '.join(account_ids)}")
+        bot.run_all_accounts(account_ids)
+    elif args.account:
+        print(f"[ACCOUNT] Chay: {args.account}")
+        bot._state_machine.run(account_id=args.account, initial_state=initial_state)
     else:
-        print("▶  Chạy tất cả accounts...")
-        bot.run_all_accounts()
+        if initial_state != BotState.BOOT:
+            # Skip login: chạy account đầu tiên từ state chỉ định
+            accounts = bot._loader.get_enabled_accounts()
+            if accounts:
+                print(f"[SKIP LOGIN] Chay account: {accounts[0].id}")
+                bot._state_machine.run(account_id=accounts[0].id, initial_state=initial_state)
+            else:
+                print("[ERROR] Khong co account nao duoc enable trong config!")
+        else:
+            print("[START] Chay tat ca accounts...")
+            bot.run_all_accounts()
 
 
 def run_gui():
@@ -95,29 +141,58 @@ Examples:
     )
     parser.add_argument(
         "--mock", action="store_true",
-        help="Dùng MockADB – không cần LDPlayer"
+        help="Dung MockADB – khong can LDPlayer"
+    )
+    parser.add_argument(
+        "--skip-login", action="store_true",
+        help="Bo qua Login, bat dau tu nhiem vu Thuong hoi"
     )
     parser.add_argument(
         "--account", type=str, default="",
-        help="Chỉ chạy account này (ví dụ: ACC_01)"
+        help="Chi chay account nay (vi du: ACC_01)"
+    )
+    parser.add_argument(
+        "--accounts", type=str, default="",
+        help="Hang doi account cach nhau bang dau phay (vi du: ACC_01,ACC_03)"
     )
     parser.add_argument(
         "--gui", action="store_true",
-        help="Mở giao diện GUI PySide6"
+        help="Mo giao dien GUI PySide6"
     )
     parser.add_argument(
         "--config-dir", type=str, default="config",
-        help="Thư mục chứa config (mặc định: config/)"
+        help="Thu muc chua config (mac dinh: config/)"
+    )
+
+    parser.add_argument(
+        "--launcher", action="store_true",
+        help="Mo Launcher GUI de chon may ao LDPlayer va khoi dong bot"
+    )
+    parser.add_argument(
+        "--server", type=str, default="S1",
+        help="Server game (vi du: S1, S2)"
+    )
+    parser.add_argument(
+        "--device", type=str, default="",
+        help="Target ADB serial (vi du: 127.0.0.1:5555 hoac emulator-5556)"
+    )
+    parser.add_argument(
+        "--instance", type=int, default=None,
+        help="LDPlayer instance index (vi du: 0, 1)"
     )
 
     args = parser.parse_args()
 
     print("=" * 55)
-    print("  AutoQuestTool – Tình Kiếm Truyền Kỳ Automation")
+    print("  AutoQuestTool - Tinh Kiem Truyen Ky Automation")
     print("=" * 55)
 
     if args.check_env:
         run_check_env()
+        return
+
+    if args.launcher:
+        run_launcher()
         return
 
     if args.gui:

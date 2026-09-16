@@ -11,18 +11,58 @@ templates:
   # Screens
   # ---------------------------
   login_screen:
-    path: "assets/templates/screens/login/login_bg.png"
-    confidence: 0.80
+    path: "assets/templates/screens/login/login_tab_bar.png"
+    confidence: 0.75
     region: null  # null = full screen
 
   ingame_screen:
     path: "assets/templates/screens/ingame/ingame_bg.png"
-    confidence: 0.80
-    region: "top_bar"
+    confidence: 0.70
+    region: null
+
+  minimap:
+    path: "assets/templates/screens/ingame/minimap.png"
+    confidence: 0.70
+    region: null
+
+  btn_tui:
+    path: "assets/templates/menu/btn_tui.png"
+    confidence: 0.75
+    region: null
 
   loading_screen:
     path: "assets/templates/screens/loading/loading.png"
     confidence: 0.75
+    region: null
+
+  label_tai_khoan:
+    path: "assets/templates/screens/login/label_tai_khoan.png"
+    confidence: 0.75
+    region: null
+
+  label_mat_khau:
+    path: "assets/templates/screens/login/label_mat_khau.png"
+    confidence: 0.75
+    region: null
+
+  btn_vao_game:
+    path: "assets/templates/screens/login/btn_vao_game.png"
+    confidence: 0.80
+    region: null
+
+  char_enter_btn:
+    path: "assets/templates/screens/login/char_enter_btn.png"
+    confidence: 0.80
+    region: null
+
+  btn_tro_lai:
+    path: "assets/templates/popup/btn_tro_lai.png"
+    confidence: 0.80
+    region: null
+
+  header_chon_nhan_vat:
+    path: "assets/templates/screens/login/header_chon_nhan_vat.png"
+    confidence: 0.85
     region: null
 
   # ---------------------------
@@ -43,11 +83,21 @@ templates:
     confidence: 0.85
     region: "bottom_bar"
 
+  quest_banner:
+    path: "assets/templates/quest/banner_tan_thu.png"
+    confidence: 0.85
+    region: null
+
+  quest_btn:
+    path: "assets/templates/quest/btn_nhiem_vu.png"
+    confidence: 0.85
+    region: null
+
   # Quest type icons
   quest_icon_npc:
     path: "assets/templates/quest/accept/icon_npc.png"
-    confidence: 0.82
-    region: "quest_sidebar"
+    confidence: 0.75
+    region: null
 
   quest_icon_shop:
     path: "assets/templates/quest/accept/icon_shop.png"
@@ -70,7 +120,23 @@ templates:
   npc_name_plate:
     path: "assets/templates/npc/name_plate.png"
     confidence: 0.75
-    region: "center"
+    region: null
+
+  dialog_box:
+    path: "assets/templates/npc/dialog_box.png"
+    confidence: 0.75
+    region: null
+
+  npc_header_da_tau:
+    path: "assets/templates/npc/npc_header_da_tau.png"
+    confidence: 0.75
+    region: null
+
+  npc_chu_thuong_hoi_green:
+    path: "assets/templates/npc/npc_chu_thuong_hoi_green.png"
+    confidence: 0.75
+    region: null
+
 
   # ---------------------------
   # Shop

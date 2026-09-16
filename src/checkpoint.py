@@ -46,6 +46,7 @@ class Checkpoint:
             "error_message": context.error_message,
             "last_action": context.last_action,
             "total_quests_done": context.total_quests_done,
+            "extra": context.extra,
             "timestamp": datetime.utcnow().isoformat(),
         }
         try:
@@ -85,6 +86,7 @@ class Checkpoint:
         ctx.error_message = data.get("error_message", "")
         ctx.last_action = data.get("last_action", "")
         ctx.total_quests_done = data.get("total_quests_done", 0)
+        ctx.extra = data.get("extra", {})
         return ctx
 
     def clear(self) -> None:

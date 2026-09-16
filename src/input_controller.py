@@ -41,7 +41,7 @@ class InputController:
 
     def tap(self, x: int, y: int, delay_after: Optional[float] = None) -> None:
         """Tap tại tọa độ."""
-        logger.info(f"INPUT: tap ({x}, {y})")
+        logger.debug(f"INPUT: tap ({x}, {y})")
         self._adb.tap(x, y)
         if delay_after is not None:
             time.sleep(delay_after)
@@ -53,11 +53,11 @@ class InputController:
         self.tap(result.center_x, result.center_y, delay_after)
 
     def double_tap(self, x: int, y: int) -> None:
-        logger.info(f"INPUT: double_tap ({x}, {y})")
+        logger.debug(f"INPUT: double_tap ({x}, {y})")
         self._adb.double_tap(x, y)
 
     def long_press(self, x: int, y: int, duration_ms: int = 1000) -> None:
-        logger.info(f"INPUT: long_press ({x}, {y}) {duration_ms}ms")
+        logger.debug(f"INPUT: long_press ({x}, {y}) {duration_ms}ms")
         self._adb.long_press(x, y, duration_ms)
 
     # ============================
@@ -69,9 +69,10 @@ class InputController:
         x1: int, y1: int,
         x2: int, y2: int,
         duration_ms: Optional[int] = None,
+        duration: Optional[int] = None,
     ) -> None:
-        dur = duration_ms or self.config.timing.swipe_duration
-        logger.info(f"INPUT: swipe ({x1},{y1}) → ({x2},{y2}) {dur}ms")
+        dur = duration_ms or duration or self.config.timing.swipe_duration
+        logger.debug(f"INPUT: swipe ({x1},{y1}) → ({x2},{y2}) {dur}ms")
         self._adb.swipe(x1, y1, x2, y2, dur)
 
     def drag(
@@ -80,7 +81,7 @@ class InputController:
         x2: int, y2: int,
         duration_ms: int = 500,
     ) -> None:
-        logger.info(f"INPUT: drag ({x1},{y1}) → ({x2},{y2}) {duration_ms}ms")
+        logger.debug(f"INPUT: drag ({x1},{y1}) → ({x2},{y2}) {duration_ms}ms")
         self._adb.drag(x1, y1, x2, y2, duration_ms)
 
     def scroll_up(self, center_x: int, center_y: int, distance: int = 300) -> None:
@@ -99,17 +100,20 @@ class InputController:
         self._adb.input_text(text)
 
     def clear_and_type(
-        self, x: int, y: int, text: str, clear_length: int = 30
+        self, x: int, y: int, text: str, clear_length: int = 20
     ) -> None:
-        """Tap vào field, xóa nội dung cũ rồi nhập text mới."""
+        """Tap vào field, xóa nội dung cũ và nhập text mới."""
         self.tap(x, y)
+        time.sleep(0.8)
+        # Gửi backspace để xóa ký tự cũ (nếu có)
+        del_keys = " ".join(["67"] * min(clear_length, 15))
+        try:
+            self._adb._run(["shell", f"input keyevent {del_keys}"])
+        except Exception:
+            pass
         time.sleep(0.3)
-        # Chọn tất cả rồi xóa
-        self._adb.key_event(123)   # KEYCODE_MOVE_END
-        for _ in range(clear_length):
-            self._adb.key_event(67)  # KEYCODE_DEL
-        time.sleep(0.2)
-        self.input_text(text)
+        self.input_text(str(text))
+        time.sleep(0.6)
 
     # ============================
     # Navigation Keys

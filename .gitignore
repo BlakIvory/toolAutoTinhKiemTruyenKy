@@ -14,3 +14,13 @@ dist/
 build/
 *.spec
 logs/debug/
+
+# Local installers, runtime data, and diagnostic captures
+/ADB/
+/LDPlayer/
+/runtime/
+/scratch/
+/*.png
+.env
+.env.*
+!.env.example
