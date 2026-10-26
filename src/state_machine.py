@@ -199,6 +199,8 @@ class StateMachine:
 
             try:
                 next_state = handler(self._context)
+                if hasattr(self._context, "extra") and isinstance(self._context.extra, dict):
+                    self._context.extra.pop("_adb_transient_retries", None)
                 if next_state:
                     self._transition(next_state)
                 else:
@@ -209,6 +211,15 @@ class StateMachine:
                 logger.error(
                     f"[{account_id}] BotError in {state}: {e.code} – {e.message}"
                 )
+                if e.code == ErrorCode.ADB_003 and hasattr(self._context, "extra") and isinstance(self._context.extra, dict):
+                    adb_retries = self._context.extra.get("_adb_transient_retries", 0) + 1
+                    if adb_retries <= 3:
+                        logger.warning(f"[{account_id}] Gặp lỗi chụp màn hình ADB ({e.message}), tự động thử lại lần {adb_retries}/3 sau 1s...")
+                        self._context.extra["_adb_transient_retries"] = adb_retries
+                        time.sleep(1.0)
+                        continue
+                if hasattr(self._context, "extra") and isinstance(self._context.extra, dict):
+                    self._context.extra.pop("_adb_transient_retries", None)
                 self._context.error_code = e.code
                 self._context.error_message = e.message
                 self._transition(BotState.ERROR)

@@ -1,79 +1,49 @@
-# =====================================================
-# AutoQuestTool - App Config
-# Game: Tình Kiếm Truyền Kỳ
-# =====================================================
-
-# ---------------------------
-# Emulator Settings
-# ---------------------------
 emulator:
-  type: "ldplayer9"                              # ldplayer9 | ldplayer
-  ldplayer_path: "D:/LDPlayer/LDPlayer9"         # Thu muc cai LDPlayer
-  ldconsole_path: "D:/LDPlayer/LDPlayer9/ldconsole.exe"  # Tim thay tu Get-Process
-  instance_id: 0                                 # Index cua emulator instance mac dinh
-  adb_host: "127.0.0.1"
-  adb_port: 5555                                 # Port ADB của LDPlayer – 5555 (emulator-5554)
-  width: 1600                                   # detected from: adb shell wm size
+  type: ldplayer9
+  ldplayer_path: D:/LDPlayer/LDPlayer14
+  ldconsole_path: D:/LDPlayer/LDPlayer14/ldconsole.exe
+  instance_id: 0
+  adb_host: 127.0.0.1
+  adb_port: 5555
+  width: 1600
   height: 900
   dpi: 240
-
-# ---------------------------
-# ADB Settings
-# ---------------------------
 adb:
-  adb_path: "D:/LDPlayer/LDPlayer9/adb.exe"  # Sử dụng adb của LDPlayer để đồng bộ server/client
-  connect_timeout: 10 # giây
-  command_timeout: 30 # giây
-  screenshot_method: "screencap"  # screencap | uiautomator
-
-# ---------------------------
-# Game Settings
-# ---------------------------
+  adb_path: D:/LDPlayer/LDPlayer14/adb.exe
+  connect_timeout: 10
+  command_timeout: 30
+  screenshot_method: screencap
 game:
-  package_name: "com.titanstudio.tkcm"  # Package name chinh xac (da xac nhan qua adb)
-  activity_name: ""   # Main activity - để trống nếu chưa biết
-  startup_wait: 15    # giây chờ sau khi start game
-
-# ---------------------------
-# Vision Settings
-# ---------------------------
+  package_name: com.titanstudio.tkcm
+  activity_name: ''
+  startup_wait: 3
 vision:
   default_confidence: 0.85
-  match_method: "TM_CCOEFF_NORMED"  # OpenCV template matching method
-
-# ---------------------------
-# Timing / Timeout
-# ---------------------------
+  match_method: TM_CCOEFF_NORMED
 timing:
-  tap_delay: 0.05       # giây sau mỗi tap (giảm từ 0.1s -> 0.05s)
-  swipe_duration: 150   # ms (giảm từ 180ms -> 150ms)
-  screenshot_interval: 0.2  # giây giữa các lần chụp (giảm từ 0.3s -> 0.2s)
-  action_timeout: 12    # giây timeout cho từng action
-  login_timeout: 45     # giây timeout đăng nhập
-  navigation_timeout: 15  # giây timeout navigation
-
-# ---------------------------
-# Retry Settings
-# ---------------------------
+  tap_delay: 0.05
+  swipe_duration: 150
+  screenshot_interval: 0.2
+  action_timeout: 5
+  login_timeout: 30
+  navigation_timeout: 5
 retry:
   max_attempts: 3
-  delay_between: 0.5   # giây (giảm từ 0.8s -> 0.5s)
-
-# ---------------------------
-# Mode
-# ---------------------------
+  delay_between: 0.5
 mode:
-  dry_run: false       # true → block BUY/TRANSFER/LOGOUT
-  mock_adb: false      # true → dùng MockADBController (test không cần emulator)
-  debug_screenshots: true  # Lưu ảnh debug khi có lỗi
-  save_path: "logs/debug"
-  commerce_only: true  # Chỉ làm nhiệm vụ Thương hội, bỏ nhiệm vụ thường/chính tuyến
-
-# ---------------------------
-# Logging
-# ---------------------------
+  dry_run: false
+  mock_adb: false
+  debug_screenshots: true
+  save_path: logs/debug
+  commerce_only: true
 logging:
-  level: "DEBUG"       # DEBUG | INFO | WARNING | ERROR
-  log_dir: "logs"
-  rotation: "1 day"
-  retention: "7 days"
+  level: DEBUG
+  log_dir: logs
+  rotation: 1 day
+  retention: 7 days
+commerce_optimization:
+  abandon_combat_immediately: true   # Hủy ngay lập tức các nhiệm vụ đánh quái để chỉ làm NV đối thoại/shop (tiết kiệm 70% thời gian)
+  quest_timeout_minutes: 15          # Hủy bỏ bất kỳ nhiệm vụ nào nếu làm quá 15 phút (tránh kẹt acc)
+  use_nearest_commerce_chief: true   # Gặp Chủ thương hội tại thành phố hiện tại để trả/hủy NV thay vì ép về Tuyền Châu
+  return_via_xa_phu: true            # Khi ở map dã ngoại, đi Xa Phu về thành phố gần nhất
+  fast_dialog_delays: true           # Giảm thiểu các khoảng thời gian chờ (delay) khi đối thoại và kiểm tra nhiệm vụ

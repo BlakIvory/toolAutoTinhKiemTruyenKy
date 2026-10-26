@@ -15,6 +15,9 @@ def test_meet_npc_returns_logout_when_20_quests_done():
     bot._vision = MagicMock()
     bot._find_dialog_buttons = MagicMock(return_value=[(400, 600)])
     bot._get_username = MagicMock(return_value='hk0001')
+    bot._is_near_commerce_chief = MagicMock(return_value=True)
+    # Dialog is open before turn-in and closes automatically on success.
+    bot._is_npc_dialog_open = MagicMock(side_effect=[True, False])
 
     ctx = StateContext(account_id='ACC_01')
     ctx.total_quests_done = 19
@@ -68,8 +71,18 @@ def test_is_account_completed_today():
     bot = BotController.__new__(BotController)
     with patch("pathlib.Path.exists", return_value=True):
         with patch("builtins.open", MagicMock()):
-            with patch("json.load", return_value={"total_quests_done": 20, "status_text": "Đã hoàn thành 20/20"}):
+            from datetime import datetime
+            today = datetime.now().strftime("%Y-%m-%d")
+            with patch("json.load", return_value={"total_quests_done": 20, "status_text": "Đã hoàn thành 20/20", "date": today}):
                 assert bot._is_account_completed_today("ACC_01") is True
+
+
+def test_is_account_completed_today_returns_false_when_recorded_yesterday():
+    bot = BotController.__new__(BotController)
+    with patch("pathlib.Path.exists", return_value=True):
+        with patch("builtins.open", MagicMock()):
+            with patch("json.load", return_value={"total_quests_done": 20, "status_text": "Đã hoàn thành 20/20", "date": "2020-01-01"}):
+                assert bot._is_account_completed_today("ACC_01") is False
 
 
 def test_verify_ingame_switches_to_next_account_on_account_in_use_popup():

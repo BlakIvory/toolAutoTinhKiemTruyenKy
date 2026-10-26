@@ -1,0 +1,93 @@
+# =====================================================
+# AutoQuestTool - Custom Dictionary / Defined Nouns
+# Định nghĩa danh từ để tránh OCR / game nhận dạng sai
+# =====================================================
+
+custom_entities:
+  # ─── NPC ───
+  - category: "NPC"
+    canonical_name: "Chu Bân Cử"
+    aliases: "chu ban cu, chu ban cy, chu ban cii, chu ban, ban cu, chu bàn cử, chủ bàn cử, chủ bân cử, chu bân cử"
+
+  - category: "NPC"
+    canonical_name: "Chủ tửu lầu"
+    aliases: "chu tuu lau, chu tiu lau, chi tiu lau, cho ti lau, cho tiu lau, tuu lau"
+
+  - category: "NPC"
+    canonical_name: "Thầy bói"
+    aliases: "thay boi, thayboi, thay, thay bdi, thay bai"
+
+  - category: "NPC"
+    canonical_name: "Cẩm Nương"
+    aliases: "cam nuong, can nuong, cam nong, cam nuog"
+
+  - category: "NPC"
+    canonical_name: "Du Phương đại phu"
+    aliases: "du phuong dai phu, du phuong, duong dai phu"
+
+  - category: "NPC"
+    canonical_name: "Cấm quân"
+    aliases: "cam quan, can quan"
+
+  - category: "NPC"
+    canonical_name: "Chủ Tiệm Nam phục"
+    aliases: "chu tiem nam phuc, chi tiem nam phuc, chi tiem nam phyc, tiem nam phuc"
+
+  - category: "NPC"
+    canonical_name: "Chủ Tiệm Nữ phục"
+    aliases: "chu tiem nu phuc, chi tiem nu phuc, chi tiem nu phyc, tiem nu phuc"
+
+  - category: "NPC"
+    canonical_name: "Quan viên thoái nhiệm"
+    aliases: "quan vien thoai niem, quan vien thoai nhlem"
+
+  # ─── Quái vật ───
+  - category: "Quái vật"
+    canonical_name: "Cá sấu"
+    aliases: "ca sau, ca sauu"
+
+  - category: "Quái vật"
+    canonical_name: "Cóc độc"
+    aliases: "coc doc, goc dpc, coc dpc, goc doc, coc dop, goc dop"
+
+  - category: "Quái vật"
+    canonical_name: "Xí Hỏa Hắc giáo đồ"
+    aliases: "xi hoa hac giao do, xi hoa bach giao do, xi hoa giao do, hac giao do, bach giao do, hi hoa hac giao do"
+
+  - category: "Quái vật"
+    canonical_name: "Bát phụ Hà Đông Sư"
+    aliases: "bat phu ha dong su, bat phy ha dor, bat phu ha dor, ha dong su, bat phu, bat phy"
+
+  - category: "Quái vật"
+    canonical_name: "Quân Liêu"
+    aliases: "quan lieu, lieu quan, lieu binh"
+
+  - category: "Quái vật"
+    canonical_name: "Sói điên"
+    aliases: "soi dien"
+
+  - category: "Quái vật"
+    canonical_name: "Sói hoang"
+    aliases: "soi hoang"
+
+  # ─── Bản đồ ───
+  - category: "Bản đồ"
+    canonical_name: "Vân Mộng trạch"
+    aliases: "van mong trach, van mong"
+
+  - category: "Bản đồ"
+    canonical_name: "Dương Trung động"
+    aliases: "duong trung dong, duong trung, tang 1 duong trung dong, tang 2 duong trung dong"
+
+  - category: "Bản đồ"
+    canonical_name: "Tường Vân động"
+    aliases: "tuong van dong, tuong van"
+
+  # ─── Vật phẩm ───
+  - category: "Vật phẩm"
+    canonical_name: "Lục Trụ Nguyên Thạch"
+    aliases: "luc tru nguyen thach, luc tru, nguyen thach"
+
+  - category: "Vật phẩm"
+    canonical_name: "Bách Thảo Lộ"
+    aliases: "bach thao lo, bach thao"

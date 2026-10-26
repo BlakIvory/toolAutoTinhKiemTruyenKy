@@ -43,6 +43,7 @@ def test_western_merchant_requires_identity_tokens():
     assert is_western_merchant_name("Thương nhân Tây Vực")
     assert is_western_merchant_name("Thuong nhan Tay Ho")
     assert not is_western_merchant_name("Long Tuyen Thon")
+    assert not is_western_merchant_name("Ta da dat 1 bao dao 0 cho Thuong nhan Tay Vuc, xin giup ta lay ve! Co the den Bien Ki")
 
 
 def test_parent_city_does_not_match_directional_submap():

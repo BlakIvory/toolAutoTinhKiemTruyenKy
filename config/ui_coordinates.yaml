@@ -16,8 +16,8 @@ emulator_home:
 # Login Screen (1600x900)
 # ---------------------------
 login:
-  username_field:       { x: 820, y: 318 }
-  password_field:       { x: 820, y: 417 }
+  username_field:       { x: 860, y: 318 }
+  password_field:       { x: 860, y: 417 }
   login_button:         { x: 834, y: 622 }
   server_change_button: { x: 1000, y: 125 }
   server_s1_button:     { x: 1204, y: 206 }
@@ -34,7 +34,7 @@ login:
 main_menu:
   quest_button:     { x: 100, y: 600 }  # Nút nhiệm vụ
   map_button:       { x: 200, y: 600 }  # Nút bản đồ
-  bag_button:       { x: 1180, y: 100 } # Túi đồ
+  bag_button:       { x: 1470, y: 325 } # Túi đồ (1600x900)
   back_button:      { x: 50, y: 50 }    # Nút quay lại
 
 # ---------------------------
@@ -47,11 +47,20 @@ quest:
   quest_icon_area:  { x1: 0, y1: 0, x2: 200, y2: 720 }  # ROI sidebar nhiệm vụ
 
 # ---------------------------
+# Commerce Quest UI (1600x900)
+# ---------------------------
+commerce_quest:
+  quest_button:      { x: 1403, y: 755 }
+  quest_panel_close: { x: 1466, y: 125 }
+  quest_panel_merchant_row: { x: 482, y: 445 }
+
+# ---------------------------
 # NPC Interact
 # ---------------------------
 npc:
   talk_button:      { x: 640, y: 500 }
   close_button:     { x: 1200, y: 100 }
+  interact_bubble:  { x: 1268, y: 335 }
 
 # ---------------------------
 # Shop
@@ -59,7 +68,9 @@ npc:
 shop:
   buy_button:       { x: 900, y: 500 }
   confirm_button:   { x: 640, y: 450 }
-  close_button:     { x: 1200, y: 100 }
+  close_button:     { x: 679, y: 110 }
+  inventory_close:  { x: 1565, y: 95 }
+  sort_cancel_button: { x: 1059, y: 546 }
   quantity_field:   { x: 640, y: 380 }
 
 # ---------------------------
@@ -101,34 +112,56 @@ regions:
 # Navigation & Map UI (1600x900)
 # ---------------------------
 navigation:
-  minimap_button:      { x: 1520, y: 100 }
-  map_tab_find_map:    { x: 176, y: 162 }
-  map_tab_find_npc:    { x: 376, y: 161 }
-  map_list_region:     { x1: 75, y1: 250, x2: 465, y2: 865 }
+  quest_tracker_collapse_button: { x: 62, y: 165 } # Mũi tên góc trái trên: thu gọn khung nhiệm vụ HUD sau đăng nhập
+  minimap_button:      { x: 1480, y: 60 }
+  map_tab_find_map:    { x: 172, y: 175 }
+  map_tab_find_npc:    { x: 372, y: 175 }
+  map_list_region:     { x1: 50, y1: 250, x2: 290, y2: 820 }
   map_tuyen_chau:      { x: 115, y: 315 }
   map_search_input:    { x: 266, y: 222 }
   map_npc_search_result: { x: 200, y: 285 }
-  map_close_button:    { x: 1519, y: 77 }
+  map_close_button:    { x: 1512, y: 68 }
   map_world_button:    { x: 1436, y: 782 }
   map_confirm_button:  { x: 1015, y: 778 }
   settings_close_button: { x: 1412, y: 170 }
-  chat_close_button:     { x: 795, y: 105 }
+  chat_close_button:     { x: 774, y: 135 } # Nút dấu X kim cương vàng góc trên phải bảng Kênh chat
+  chat_collapse_button:  { x: 490, y: 843 } # Nút hình tròn mũi tên v thu gọn thanh chat dưới đáy màn hình (1600x900)
   arena_close_button:    { x: 1475, y: 120 }
+  world_map_cities:
+    "Biện Kinh":     { x: 1154, y: 337 }
+    "Thành Đô":      { x: 825, y: 461 }
+    "Tương Dương":   { x: 1132, y: 446 }
+    "Dương Châu":    { x: 1321, y: 407 }
+    "Đại Lý":        { x: 707, y: 556 }
+    "Tuyền Châu":    { x: 1202, y: 562 }
+    "Phượng Tường":  { x: 825, y: 337 }
 
 # Commerce-guild quest flow (1600x900)
 commerce_quest:
-  quest_button:          { x: 1404, y: 755 }
-  quest_panel_close:     { x: 1495, y: 95 }
+  quest_button:          { x: 1403, y: 755 }
+  quest_panel_close:     { x: 1466, y: 125 }
+  quest_panel_cycle_row:    { x: 473, y: 398 } # Nhánh "Tuần hoàn" trong cây nhiệm vụ bên trái
+  quest_panel_merchant_row: { x: 474, y: 428 } # Dòng "Nhiệm vụ Thương hội" trong danh sách bên trái
   npc_name_region:       { x1: 560, y1: 280, x2: 1050, y2: 560 }
   dialog_options_region: { x1: 180, y1: 520, x2: 1450, y2: 760 }
   contribute_fallback:   { x: 405, y: 585 }
+  dialog_teleport_option: { x: 330, y: 575 } # Tùy chọn "Hãy đưa ta tới nơi nhiệm vụ"
+  complete_quest_fallback: { x: 340, y: 590 } # Nút "Nhiệm vụ đã hoàn thành!" (Hàng 1, Cột 1)
+  abandon_quest_option:    { x: 1167, y: 580 } # Nút "Ta muốn hủy bỏ nhiệm vụ đang làm" khi hộp thoại có 3 tùy chọn (NV đánh quái / Xa phu - Hàng 1, Cột 3)
+  abandon_quest_option_shop: { x: 380, y: 700 } # Nút "Ta muốn hủy bỏ nhiệm vụ đang làm" khi hộp thoại có 4 tùy chọn (NV Mua đồ / Nộp đồ - Hàng 2, Cột 1)
+  abandon_quest_confirm:   { x: 303,  y: 571 } # Nút "Hủy bỏ nhiệm vụ" trong popup trừ 5 điểm danh vọng
+  abandon_quest_finish:    { x: 309,  y: 543 } # Nút "Kết thúc đối thoại" sau khi hủy xong
   quest_info_region:     { x1: 180, y1: 180, x2: 1450, y2: 760 }
   buff_button:           { x: 1308, y: 160 }
+  disable_buff_on_move:  true
   auto_button:           { x: 1308, y: 240 }
+  interact_bubble:       { x: 1268, y: 335 } # Icon bong bóng chat nổi để mở đối thoại NPC khi đứng gần
+  dialogue_banner_icon:  { x: 735, y: 808 }  # Icon cuộn giấy trên khung chat (Cùng với ... đối thoại)
+  dialogue_modal_dismiss: { x: 800, y: 500 } # Vị trí click tắt popup đối thoại nổi giữa màn hình
   quest_tracker_region:  { x1: 0, y1: 210, x2: 420, y2: 520 }
-  map_coordinate_x:      { x: 704, y: 778 }
-  map_coordinate_y:      { x: 842, y: 778 }
-  map_coordinate_confirm: { x: 1015, y: 778 }
+  map_coordinate_x:      { x: 667, y: 780 }
+  map_coordinate_y:      { x: 804, y: 780 }
+  map_coordinate_confirm: { x: 1018, y: 783 }
   # commerce_chief_cities:
   #   "Biện Kinh":     { x: 170, y: 182 }
   #   "Thành Đô":      { x: 237, y: 218 }
@@ -136,53 +169,150 @@ commerce_quest:
   #   "Dương Châu":    { x: 204, y: 196 }
   #   "Tuyền Châu":    { x: 192, y: 182 }
   western_merchant_spawns:
-    - { city: "Tuyền Châu", x: 187, y: 191 }
-    - { city: "Biện Kinh", x: 179, y: 184 }
-    - { city: "Thành Đô", x: 224, y: 225 }
-    - { city: "Tương Dương", x: 187, y: 180 } #ok
+    - { city: "Tuyền Châu", x: 187, y: 191 } # ok
+    - { city: "Biện Kinh", x: 180, y: 185 } # ok
+    - { city: "Thành Đô", x: 225, y: 225 }
+    - { city: "Tương Dương", x: 186, y: 180 } # ok
     - { city: "Dương Châu", x: 206, y: 194 } # ok
-    - { city: "Đại Lý", x: 178, y: 187 } #ok
+    - { city: "Đại Lý", x: 178, y: 187 } # ok
   major_cities:
     - { name: "Biện Kinh", x: 170, y: 182 }
     - { name: "Thành Đô", x: 237, y: 218 }
     - { name: "Tương Dương", x: 182, y: 182 }
     - { name: "Dương Châu", x: 204, y: 196 }
     - { name: "Tuyền Châu", x: 192, y: 182 }
+  commerce_chief_arrival_nudge:
+    "Dương Châu": { x: 204, y: 196, tolerance: 1, dx: 70, dy: -70, duration_ms: 500 }
+  xa_phu_no_travel_button: { x: 300, y: 780 } # Nút "Không đi đâu cả" trong hội thoại Xa Phu
+  xa_phu_cities:
+    "Biện Kinh":   { x: 342, y: 562 }
+    "Thành Đô":    { x: 719, y: 561 }
+    "Tuyền Châu":  { x: 1155, y: 561 }
+    "Tương Dương": { x: 1155, y: 561 }
+    "Dương Châu":  { x: 354, y: 671 }
+    "Phụng Tường": { x: 745, y: 671 }
+    "Đại Lý":      { x: 1128, y: 672 }
 
 # ---------------------------
 # Western Merchant & Shop UI (1600x900)
 # ---------------------------
 shop:
-  dialog_buy_option:     { x: 272, y: 566 }  # Tùy chọn "Đồng ý mua" trong hộp thoại
-  buy_button:            { x: 538, y: 485 }  # Nút "Mua" màu cam trong bảng thông tin
-  confirm_button:        { x: 465, y: 786 }  # Nút "Đồng ý" trong popup số lượng
-  cancel_button:         { x: 663, y: 786 }  # Nút "Rời khỏi" trong popup số lượng
-  close_button:          { x: 702, y: 128 }  # Nút 'X' đóng Tạp hóa
-  inventory_close:       { x: 1577, y: 81 }  # Nút 'X' đóng Hành trang
-  tooltip_title_region:  { x1: 700, y1: 30, x2: 1100, y2: 150 }
+  dialog_buy_option:     { x: 254, y: 578 }  # Tùy chọn "Đồng ý mua" trong hộp thoại
+  buy_button:            { x: 407, y: 535 }  # Nút "Mua" màu cam chuẩn (chuẩn OCR: 407, 535)
+  confirm_button:        { x: 314, y: 816 }  # Nút "Đồng ý" trong popup số lượng (chuẩn OCR 1600x900: 314, 816)
+  cancel_button:         { x: 516, y: 815 }  # Nút "Rời khỏi" trong popup số lượng (chuẩn OCR 1600x900: 516, 815)
+  close_button:          { x: 679, y: 110 }   # Nút 'X' hình thoi đóng Tạp hóa / Cửa hiệu (chuẩn 1600x900)
+  inventory_close:       { x: 1535, y: 109 }  # Nút 'X' hình thoi đóng Hành trang (chuẩn 1600x900)
+  sort_button:           { x: 1485, y: 260 }  # Nút "Sắp xếp" trên bảng Hành trang
+  sort_confirm_button:   { x: 635,  y: 600 }  # Nút "Đồng ý" (màu vàng) trong popup xác nhận tự động sắp xếp
+  sort_cancel_button:    { x: 1075, y: 600 }  # Nút "Hủy bỏ" (màu đỏ) trong popup xác nhận tự động sắp xếp
+  tooltip_close:         { x: 1073, y: 90 }   # Nút 'X' đóng tooltip thông tin vật phẩm (chuẩn 1600x900)
+  safe_neutral_tap:      { x: 465, y: 750 }   # Điểm bấm trung tính an toàn để bỏ chọn
+  tooltip_title_region:  { x1: 670, y1: 40, x2: 1080, y2: 320 }
   grid_slots:
     # Hàng 1
-    - { x: 316, y: 190 }
-    - { x: 397, y: 190 }
-    - { x: 486, y: 190 }
-    - { x: 575, y: 190 }
+    - { x: 285, y: 195 }
+    - { x: 375, y: 195 }
+    - { x: 465, y: 195 }
     # Hàng 2
-    - { x: 316, y: 279 }
-    - { x: 397, y: 279 }
-    - { x: 486, y: 279 }
-    - { x: 575, y: 279 }
-    # Hàng 3
-    - { x: 316, y: 368 }
-    - { x: 397, y: 368 }
-    - { x: 486, y: 368 }
-    - { x: 575, y: 368 }
+    - { x: 285, y: 280 }
+    - { x: 375, y: 280 }
+    - { x: 465, y: 280 }
+    # Hàng 3 (Tinh Kim Tây Vực ở 285, 365)
+    - { x: 285, y: 365 }
+    - { x: 375, y: 365 }
+    - { x: 465, y: 365 }
     # Hàng 4
-    - { x: 316, y: 457 }
-    - { x: 397, y: 457 }
-    - { x: 486, y: 457 }
-    - { x: 575, y: 457 }
+    - { x: 285, y: 450 }
+    - { x: 375, y: 450 }
+    - { x: 465, y: 450 }
     # Hàng 5
-    - { x: 316, y: 546 }
-    - { x: 397, y: 546 }
-    - { x: 486, y: 546 }
-    - { x: 575, y: 546 }
+    - { x: 285, y: 535 }
+    - { x: 375, y: 535 }
+    - { x: 465, y: 535 }
+    # Hàng 6
+    - { x: 285, y: 620 }
+    - { x: 375, y: 620 }
+    - { x: 465, y: 620 }
+    # Hàng 7
+    - { x: 285, y: 705 }
+    - { x: 375, y: 705 }
+    - { x: 465, y: 705 }
+  # Vị trí cố định của 17 vật phẩm Thương nhân Tây Vực (Tạp hóa trang 1)
+  western_merchant_items:
+    "Bảo Đao Tây Vực": { x: 285, y: 195, row: 1, col: 1 }
+    "Linh Dược Tây Vực": { x: 375, y: 195, row: 1, col: 2 }
+    "Lục Trụ Nguyên Thạch": { x: 465, y: 195, row: 1, col: 3 }
+    "Hộ Uyển Lông Lạc Đà": { x: 285, y: 280, row: 2, col: 1 }
+    "Thịt Lạc Đà": { x: 375, y: 280, row: 2, col: 2 }
+    "Lông Đại Bàng": { x: 465, y: 280, row: 2, col: 3 }
+    "Tinh Kim Tây Vực": { x: 285, y: 365, row: 3, col: 1 }
+    "Ám Yên Nguyên Thạch": { x: 375, y: 365, row: 3, col: 2 }
+    "Pháo Hoa": { x: 465, y: 365, row: 3, col: 3 }
+    "Trứng Đại Bàng": { x: 285, y: 450, row: 4, col: 1 }
+    "Âm Phách Nguyên Thạch": { x: 375, y: 450, row: 4, col: 2 }
+    "Dạ Quang Bôi": { x: 285, y: 535, row: 5, col: 1 }
+    "Tuyết Tinh Nguyên Thạch": { x: 375, y: 535, row: 5, col: 2 }
+    "Thanh Kim Nguyên Thạch": { x: 285, y: 620, row: 6, col: 1 }
+    "Hổ Phách Nguyên Thạch": { x: 375, y: 620, row: 6, col: 2 }
+    "Lông Lạc Đà": { x: 285, y: 705, row: 7, col: 1 }
+    "Kim Cang Nguyên Thạch": { x: 375, y: 705, row: 7, col: 2 }
+
+
+
+
+# ---------------------------
+# Combat Quest & Patrol UI (1600x900)
+# ---------------------------
+combat:
+  auto_button:           { x: 1308, y: 241 } # Nút Auto đánh quái (chuẩn OCR: 1308, 241)
+  horse_button:          { x: 1553, y: 370 } # Nút lên/xuống ngựa (chuẩn OCR: 1553, 370)
+  attack_button:         null # Đã tắt: (1450, 770) trùng nút 'Nhiệm vụ', tấn công dùng Auto + chuột phải lên quái
+  chat_collapse_button:  { x: 490, y: 843 }  # Nút thu gọn thanh chat đáy màn hình tránh click nhầm
+  target_hud_region:     { x1: 320, y1: 40, x2: 1100, y2: 130 } # Vùng hiển thị tên mục tiêu/quái trên đỉnh màn hình (x=320..1100)
+  left_tracker_region:   { x1: 50, y1: 250, x2: 350, y2: 500 }   # Vùng theo dõi tiến độ diệt quái bên trái
+  joystick_center:       { x: 220, y: 680 }  # Tâm cần điều khiển ảo (góc trái dưới)
+  patrol_joystick_hold_ms: 350               # Thời gian giữ joystick mỗi lượt (giảm từ 500ms xuống 350ms giúp lướt nhanh hơn)
+  patrol_step_delay:     0.05                # Khoảng nghỉ giữa các lần di chuyển joystick (giảm xuống 0.05s)
+  combat_scan_interval:  0.05                # Quét lại mục tiêu nhanh sau mỗi thao tác (0.05s)
+  target_attack_window:  2.0                 # Chờ tối đa 2 giây cho một quái trước khi tuần tra tiếp (giảm từ 4s)
+  wall_follow_hold_ms:   1000                # Thời gian lướt joystick khi đi dọc bờ tường (1000ms giúp thoát bờ tường nhanh)
+  patrol_ground_points:  # Các hướng di chuyển tuần tra đa hướng (dy >= 0 tránh đâm vách đá phía Bắc)
+    - { x: 1200, y: 550, name: "Đông - Sâu trong hang", dx: 130, dy: 40 }
+    - { x: 1150, y: 620, name: "Đông Nam - Khoảng trống", dx: 120, dy: 80 }
+    - { x: 900,  y: 660, name: "Nam - Lòng động", dx: 20, dy: 100 }
+    - { x: 500,  y: 620, name: "Tây Nam - Mở rộng", dx: -100, dy: 80 }
+    - { x: 450,  y: 450, name: "Tây - Dọc hành lang", dx: -130, dy: 0 }
+    - { x: 600,  y: 500, name: "Tây Nam - Đoạn giữa", dx: -80, dy: 30 }
+    - { x: 800,  y: 550, name: "Nam - Trục giữa", dx: 0, dy: 60 }
+    - { x: 1050, y: 480, name: "Đông - Giữa động", dx: 80, dy: 20 }
+  patrol_minimap_points: # Các điểm di chuyển theo trục hành lang trên Minimap
+    - { x: 1400, y: 230, name: "Tây Nam - Cửa động Nga My" }
+    - { x: 1450, y: 190, name: "Giữa động" }
+    - { x: 1500, y: 150, name: "Đông Bắc - Đoạn giữa" }
+    - { x: 1540, y: 115, name: "Đông Bắc - Sâu trong hang" }
+
+# ---------------------------
+# Xa Phu Dialog City Options (1600x900)
+# ---------------------------
+xa_phu_cities:
+  bien_kinh:   { x: 342,  y: 562 }
+  thanh_do:    { x: 719,  y: 561 }
+  tuyen_chau:  { x: 1155, y: 561 }
+  tuong_duong: { x: 1155, y: 561 }
+  duong_chau:  { x: 354,  y: 671 }
+  phung_tuong: { x: 745,  y: 671 }
+  dai_ly:      { x: 1128, y: 672 }
+  khong_di:    { x: 354,  y: 770 }
+
+# Điểm dừng auto-path cạnh Xa phu. Riêng Tuyền Châu không được phát lệnh
+# điều chỉnh vị trí sau khi HUD đã vào vùng này. Chỉ bấm
+# bong bóng tương tác một lần; không bấm thân NPC/mặt đất.
+xa_phu_arrival:
+  "Tuyền Châu": { x: 188, y: 179, tolerance: 3, max_interact_clicks: 3 }
+
+# ---------------------------
+# NPC Interact Bubble (1600x900)
+# ---------------------------
+npc:
+  interact_bubble: { x: 1220, y: 299 }

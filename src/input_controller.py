@@ -56,6 +56,136 @@ class InputController:
         logger.debug(f"INPUT: double_tap ({x}, {y})")
         self._adb.double_tap(x, y)
 
+    def _send_win32_right_click(self, x: int, y: int, count: int = 2) -> bool:
+        """
+        Gửi Windows Message WM_RBUTTONDOWN và WM_RBUTTONUP tới cửa sổ LDPlayer.
+        Tự động tìm kiếm cửa sổ LDPlayer (RenderWindow / subWin) và chuyển đổi tọa độ tỉ lệ.
+        """
+        import sys
+        if sys.platform != "win32":
+            return False
+
+        try:
+            import ctypes
+            from ctypes import wintypes
+
+            user32 = ctypes.windll.user32
+            # Đảm bảo gắn với desktop "default" nếu bot chạy trong thread/session cách ly
+            h_desk = user32.OpenDesktopW("default", 0, False, 0x01FF)
+            if h_desk:
+                user32.SetThreadDesktop(h_desk)
+
+            target_hwnds = []
+
+            # 1. Thử tìm nhanh bằng class name LDPlayerMainFrame
+            main_hwnd = user32.FindWindowW("LDPlayerMainFrame", None)
+            if main_hwnd and user32.IsWindowVisible(main_hwnd):
+                target_hwnds.append(main_hwnd)
+
+            # 2. Nếu chưa thấy, EnumWindows tìm theo title/class
+            if not target_hwnds:
+                def enum_cb(hwnd, extra):
+                    if user32.IsWindowVisible(hwnd):
+                        length = user32.GetWindowTextLengthW(hwnd)
+                        if length > 0:
+                            buff = ctypes.create_unicode_buffer(length + 1)
+                            user32.GetWindowTextW(hwnd, buff, length + 1)
+                            title = buff.value.lower()
+                            class_buff = ctypes.create_unicode_buffer(256)
+                            user32.GetClassNameW(hwnd, class_buff, 256)
+                            c_name = class_buff.value.lower()
+                            if any(kw in title or kw in c_name for kw in ["ldplayer", "dnplayer", "tinh kiem"]):
+                                target_hwnds.append(hwnd)
+                    return True
+
+                WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+                user32.EnumWindows(WNDENUMPROC(enum_cb), 0)
+
+            if not target_hwnds:
+                return False
+
+            WM_MOUSEMOVE = 0x0200
+            WM_RBUTTONDOWN = 0x0204
+            WM_RBUTTONUP = 0x0205
+            MK_RBUTTON = 0x0002
+            success = False
+
+            for main_hwnd in target_hwnds:
+                child_hwnds = []
+
+                def enum_child_cb(child_hwnd, extra):
+                    class_buff = ctypes.create_unicode_buffer(256)
+                    user32.GetClassNameW(child_hwnd, class_buff, 256)
+                    c_name = class_buff.value
+                    if "RenderWindow" in c_name or "subWin" in c_name:
+                        child_hwnds.append((child_hwnd, c_name))
+                    return True
+
+                WNDENUMPROC = ctypes.WINFUNCTYPE(wintypes.BOOL, wintypes.HWND, wintypes.LPARAM)
+                user32.EnumChildWindows(main_hwnd, WNDENUMPROC(enum_child_cb), 0)
+
+                # Ưu tiên duy nhất cửa sổ RenderWindow (TheRender) của LDPlayer để nhận sự kiện chuột
+                render_hwnds = [ch for ch, c_name in child_hwnds if "renderwindow" in c_name.lower()]
+                targets = render_hwnds if render_hwnds else ([ch for ch, _ in child_hwnds] if child_hwnds else [main_hwnd])
+
+                for target_hwnd in targets:
+                    rect = wintypes.RECT()
+                    user32.GetClientRect(target_hwnd, ctypes.byref(rect))
+                    win_w = rect.right - rect.left
+                    win_h = rect.bottom - rect.top
+
+                    if win_w > 0 and win_h > 0:
+                        scale_x = int(x * win_w / 1600.0)
+                        scale_y = int(y * win_h / 900.0)
+                    else:
+                        scale_x, scale_y = x, y
+
+                    l_param = (scale_y << 16) | (scale_x & 0xFFFF)
+                    for i in range(count):
+                        user32.PostMessageW(target_hwnd, WM_MOUSEMOVE, 0, l_param)
+                        user32.PostMessageW(target_hwnd, WM_RBUTTONDOWN, MK_RBUTTON, l_param)
+                        time.sleep(0.04)
+                        user32.PostMessageW(target_hwnd, WM_RBUTTONUP, 0, l_param)
+                        if i < count - 1:
+                            time.sleep(0.08)
+                    logger.debug(f"INPUT: PostMessage WM_RBUTTON (x{count}) to hwnd={target_hwnd} at ({scale_x}, {scale_y})")
+                    success = True
+
+            return success
+        except Exception as e:
+            logger.debug(f"INPUT: _send_win32_right_click error: {e}")
+            return False
+
+    def right_click(self, x: int, y: int, count: int = 1) -> None:
+        """
+        Gửi sự kiện chuột phải (Right Click) tại tọa độ (x, y):
+        Mặc định click 2 lần (double right-click) theo yêu cầu thực chiến để vừa chọn mục tiêu vừa tấn công.
+        1. Gửi qua Windows Message (WM_RBUTTONDOWN / WM_RBUTTONUP) tới cửa sổ LDPlayer.
+        2. Chỉ fallback qua ADB khi Windows Message không gửi được.
+        """
+        logger.info(f"INPUT: right_click x{count} ({x}, {y})")
+        sent_by_win32 = self._send_win32_right_click(x, y, count=count)
+        sent_by_adb = None
+        try:
+            # ADBController.right_click thực chất là Android input tap
+            # (chuột trái). Không gửi nó sau chuột phải Windows vì cú
+            # tap trái kế tiếp có thể ghi đè/hủy lệnh tấn công.
+            if not sent_by_win32 and hasattr(self._adb, "right_click"):
+                self._adb.right_click(x, y, count=count)
+                sent_by_adb = True
+            elif not sent_by_win32:
+                for i in range(count):
+                    self.tap(x, y)
+                    if i < count - 1:
+                        time.sleep(0.1)
+                sent_by_adb = True
+        except Exception as exc:
+            logger.warning(f"INPUT: ADB right_click failed at ({x}, {y}): {exc}")
+        logger.info(
+            f"INPUT: right_click delivery win32={'OK' if sent_by_win32 else 'FAIL'}, "
+            f"adb={'SKIP' if sent_by_adb is None else ('OK' if sent_by_adb else 'FAIL')}"
+        )
+
     def long_press(self, x: int, y: int, duration_ms: int = 1000) -> None:
         logger.debug(f"INPUT: long_press ({x}, {y}) {duration_ms}ms")
         self._adb.long_press(x, y, duration_ms)
@@ -118,6 +248,11 @@ class InputController:
     # ============================
     # Navigation Keys
     # ============================
+
+    def key_event(self, keycode: int) -> None:
+        """Gửi keycode Android."""
+        logger.debug(f"INPUT: key_event {keycode}")
+        self._adb.key_event(keycode)
 
     def press_back(self) -> None:
         logger.debug("INPUT: BACK key")

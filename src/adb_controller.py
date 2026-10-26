@@ -14,7 +14,8 @@ from pathlib import Path
 from typing import Optional, List, Tuple
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 from loguru import logger
 
 from .error_codes import ErrorCode, BotError
@@ -300,51 +301,66 @@ class ADBController:
         """
         Chụp screenshot qua ADB screencap.
         Trả về numpy array BGR (OpenCV format).
-        Hỗ trợ fallback nếu exec-out không khả dụng.
+        Hỗ trợ fallback nếu exec-out không khả dụng hoặc bị truncated/rỗng.
         """
-        raw_data = None
-        try:
-            result = self._run(["exec-out", "screencap", "-p"])
-            if result.stdout and len(result.stdout) >= 100:
-                raw_data = result.stdout
-        except Exception:
-            pass
+        import cv2
 
-        if not raw_data or len(raw_data) < 100:
-            # Fallback 1: screencap qua file tạm
+        for attempt in range(4):
+            # 1. Thử exec-out screencap trực tiếp
+            raw_data = None
             try:
-                self._run(["shell", "screencap", "-p", "/sdcard/autotool_scr.png"])
-                import tempfile
-                with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
-                    tmp_path = tmp.name
-                self._run(["pull", "/sdcard/autotool_scr.png", tmp_path])
-                raw_data = Path(tmp_path).read_bytes()
+                result = self._run(["exec-out", "screencap", "-p"], timeout=8)
+                if result.stdout and len(result.stdout) >= 100:
+                    raw_data = result.stdout
+            except Exception:
+                pass
+
+            # 2. Fallback: screencap qua file tạm nếu exec-out không ra dữ liệu
+            if not raw_data or len(raw_data) < 100:
                 try:
-                    Path(tmp_path).unlink(missing_ok=True)
+                    self._run(["shell", "screencap", "-p", "/sdcard/autotool_scr.png"], timeout=10)
+                    import tempfile
+                    with tempfile.NamedTemporaryFile(suffix=".png", delete=False) as tmp:
+                        tmp_path = tmp.name
+                    self._run(["pull", "/sdcard/autotool_scr.png", tmp_path], timeout=10)
+                    raw_data = Path(tmp_path).read_bytes()
+                    try:
+                        Path(tmp_path).unlink(missing_ok=True)
+                    except Exception:
+                        pass
+                except Exception as exc:
+                    logger.debug(f"ADB screenshot fallback error (attempt {attempt + 1}): {exc}")
+
+            # 3. Kiểm tra giải mã ảnh ngay trong attempt
+            if raw_data and len(raw_data) >= 100:
+                try:
+                    img = Image.open(io.BytesIO(raw_data))
+                    img_array = np.array(img)
+                    if img_array.ndim == 3 and img_array.shape[0] > 10 and img_array.shape[1] > 10:
+                        if img_array.shape[2] == 4:
+                            return cv2.cvtColor(img_array, cv2.COLOR_RGBA2BGR)
+                        elif img_array.shape[2] == 3:
+                            return cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
+                        return img_array
+                except MemoryError:
+                    import gc
+                    gc.collect()
+                    time.sleep(0.3)
+                except Exception as dec_err:
+                    logger.debug(f"ADB screenshot decode attempt {attempt + 1} failed: {dec_err}")
+
+            if attempt < 3:
+                # Tự động kết nối lại thiết bị nếu ADB socket bị treo
+                try:
+                    self.connect()
                 except Exception:
                     pass
-            except Exception as exc:
-                logger.warning(f"ADB screenshot fallback error: {exc}")
+                time.sleep(0.5)
 
-        if not raw_data or len(raw_data) < 100:
-            raise BotError(
-                ErrorCode.ADB_003,
-                "Screenshot returned empty data",
-            )
-        try:
-            img = Image.open(io.BytesIO(raw_data))
-            img_array = np.array(img)
-            # Convert RGBA → BGR hoặc RGB → BGR cho OpenCV
-            import cv2
-            if img_array.ndim == 3 and img_array.shape[2] == 4:
-                img_bgr = cv2.cvtColor(img_array, cv2.COLOR_RGBA2BGR)
-            elif img_array.ndim == 3 and img_array.shape[2] == 3:
-                img_bgr = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
-            else:
-                img_bgr = img_array
-            return img_bgr
-        except Exception as e:
-            raise BotError(ErrorCode.ADB_003, f"Screenshot decode error: {e}")
+        raise BotError(
+            ErrorCode.ADB_003,
+            "Screenshot returned empty data",
+        )
 
     # ============================
     # Input
@@ -352,7 +368,12 @@ class ADBController:
 
     def tap(self, x: int, y: int) -> None:
         logger.debug(f"ADB: tap ({x}, {y})")
-        self._run(["shell", "input", "tap", str(x), str(y)], check=True)
+        try:
+            self._run(["shell", "input", "tap", str(x), str(y)], check=True)
+        except BotError as e:
+            logger.warning(f"ADB tap ({x}, {y}) gặp lỗi tạm thời: {e}. Thử lại...")
+            time.sleep(0.2)
+            self._run(["shell", "input", "tap", str(x), str(y)], check=False)
         time.sleep(self.config.timing.tap_delay)
 
     def double_tap(self, x: int, y: int) -> None:
@@ -360,6 +381,14 @@ class ADBController:
         self.tap(x, y)
         time.sleep(0.1)
         self.tap(x, y)
+
+    def right_click(self, x: int, y: int, count: int = 2) -> None:
+        """Gửi sự kiện click chuột phải / tap 2 lần vào quái qua ADB."""
+        logger.debug(f"ADB: right_click x{count} ({x}, {y})")
+        for i in range(count):
+            self.tap(x, y)
+            if i < count - 1:
+                time.sleep(0.1)
 
     def long_press(self, x: int, y: int, duration_ms: int = 1000) -> None:
         logger.debug(f"ADB: long_press ({x}, {y}) {duration_ms}ms")
@@ -405,6 +434,89 @@ class ADBController:
         escaped = text.replace(" ", "%s").replace("'", "\\'")
         logger.debug(f"ADB: input_text (masked)")
         self._run(["shell", "input", "text", escaped], check=True)
+        time.sleep(0.3)
+
+    def input_text_unicode(self, text: str) -> None:
+        """Nhập text Unicode (có dấu tiếng Việt) vào field đang focus.
+        
+        Dùng nhiều phương pháp:
+        1. am broadcast ADB_INPUT_TEXT (cần ADBKeyboard)
+        2. Ghi vào file rồi dùng input text pipe
+        3. Fallback: input text từng ký tự qua keyevent
+        
+        Cần thiết vì `adb shell input text` chỉ hỗ trợ ASCII.
+        """
+        logger.debug(f"ADB: input_text_unicode '{text}'")
+        
+        # Phương pháp 0: Dùng ldconsole action call.input / call.keyboard của LDPlayer (hỗ trợ Unicode tiếng Việt đầy đủ)
+        try:
+            import subprocess, os
+            ldconsole = getattr(getattr(self.config, "emulator", None), "ldconsole_path", None)
+            if not ldconsole or not os.path.exists(ldconsole):
+                for p in [
+                    "D:/LDPlayer/LDPlayer14/ldconsole.exe",
+                    "C:/LDPlayer/LDPlayer14/ldconsole.exe",
+                    "D:/LDPlayer/LDPlayer9/ldconsole.exe",
+                    "C:/LDPlayer/LDPlayer9/ldconsole.exe",
+                    "C:/Program Files/LDPlayer/LDPlayer9/ldconsole.exe",
+                ]:
+                    if os.path.exists(p):
+                        ldconsole = p
+                        break
+            idx = getattr(getattr(self.config, "emulator", None), "instance_id", 0)
+            if ldconsole and os.path.exists(ldconsole):
+                for key_name in ["call.input", "call.keyboard"]:
+                    res = subprocess.run(
+                        [ldconsole, "action", "--index", str(idx), "--key", key_name, "--value", text],
+                        capture_output=True,
+                        timeout=5
+                    )
+                    if res.returncode == 0:
+                        logger.info(f"ADB: input_text_unicode via ldconsole {key_name} '{text}' thành công")
+                        time.sleep(0.3)
+                        return
+        except Exception as e:
+            logger.debug(f"ldconsole call.input/keyboard failed: {e}")
+
+        # Phương pháp 1: Windows Clipboard + Android KEYCODE_PASTE (279)
+        try:
+            import subprocess
+            p = subprocess.Popen(["clip"], stdin=subprocess.PIPE)
+            p.communicate(input=text.encode("utf-16"), timeout=3)
+            time.sleep(0.1)
+            self._run(["shell", "input", "keyevent", "279"])
+            time.sleep(0.3)
+            logger.info(f"ADB: input_text_unicode via Clipboard paste '{text}' thành công")
+            return
+        except Exception as e:
+            logger.debug(f"Clipboard paste failed: {e}")
+
+        # Phương pháp 2: ADBKeyboard broadcast (chỉ khi ADBKeyboard thực sự được cài đặt)
+        try:
+            ime_res = self._run(["shell", "ime", "list", "-s"])
+            ime_txt = ime_res.stdout.decode(errors="replace") if ime_res.stdout else ""
+            if "adbkeyboard" in ime_txt.lower():
+                import base64
+                b64 = base64.b64encode(text.encode("utf-8")).decode("ascii")
+                result = self._run([
+                    "shell", "am", "broadcast",
+                    "-a", "ADB_INPUT_B64",
+                    "--es", "msg", b64,
+                ])
+                out = result.stdout.decode(errors="replace") if result.stdout else ""
+                if "result=0" in out or "Broadcast completed" in out:
+                    logger.info(f"ADB: input_text_unicode via ADB_INPUT_B64 thành công")
+                    time.sleep(0.3)
+                    return
+        except Exception as e:
+            logger.debug(f"ADB_INPUT_B64 failed: {e}")
+        
+        # Phương pháp 3: Fallback - nhập text không dấu (sẽ không tìm thấy NPC)
+        logger.warning(f"ADB: Không thể nhập Unicode '{text}', fallback sang ASCII")
+        from .text_recognition import normalize_game_text
+        ascii_text = normalize_game_text(text)
+        escaped = ascii_text.replace(" ", "%s")
+        self._run(["shell", "input", "text", escaped])
         time.sleep(0.3)
 
     def key_event(self, keycode: int) -> None:

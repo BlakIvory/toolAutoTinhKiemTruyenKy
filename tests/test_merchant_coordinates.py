@@ -11,9 +11,9 @@ def test_western_merchant_spawn_coordinates_are_exact():
     }
     assert actual == {
         ("Tuyền Châu", 187, 191),
-        ("Biện Kinh", 179, 184),
-        ("Thành Đô", 224, 225),
-        ("Tương Dương", 187, 180),
+        ("Biện Kinh", 180, 185),
+        ("Thành Đô", 225, 225),
+        ("Tương Dương", 186, 180),
         ("Dương Châu", 206, 194),
         ("Đại Lý", 178, 187),
     }

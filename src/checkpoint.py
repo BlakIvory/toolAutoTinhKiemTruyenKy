@@ -35,9 +35,9 @@ class Checkpoint:
         """Lưu context → state.json."""
         data = {
             "account_id": context.account_id,
-            "current_state": context.current_state.value,
-            "previous_state": context.previous_state.value,
-            "current_quest_type": context.current_quest_type.value,
+            "current_state": context.current_state.value if getattr(context, "current_state", None) else "IDLE",
+            "previous_state": context.previous_state.value if getattr(context, "previous_state", None) else None,
+            "current_quest_type": context.current_quest_type.value if getattr(context, "current_quest_type", None) else None,
             "current_map": context.current_map,
             "current_npc": context.current_npc,
             "current_shop": context.current_shop,
@@ -47,6 +47,7 @@ class Checkpoint:
             "last_action": context.last_action,
             "total_quests_done": context.total_quests_done,
             "extra": context.extra,
+            "date": datetime.now().strftime("%Y-%m-%d"),
             "timestamp": datetime.utcnow().isoformat(),
         }
         try:
@@ -56,9 +57,35 @@ class Checkpoint:
         except Exception as e:
             logger.error(f"Checkpoint save failed: {e}")
 
-    def load(self) -> Optional[Dict[str, Any]]:
-        """Đọc state.json. Trả về dict hoặc None nếu không có."""
+    def is_expired(self) -> bool:
+        """Kiểm tra state.json có phải từ ngày cũ không (nhiệm vụ Thương hội reset mỗi ngày)."""
         if not self.state_file.exists():
+            return False
+        try:
+            with open(self.state_file, "r", encoding="utf-8") as f:
+                data = json.load(f)
+            today_str = datetime.now().strftime("%Y-%m-%d")
+            file_date = data.get("date")
+            if not file_date:
+                ts = data.get("timestamp", "")
+                if ts and "T" in ts:
+                    file_date = ts.split("T")[0]
+            if not file_date:
+                try:
+                    file_date = datetime.fromtimestamp(self.state_file.stat().st_mtime).strftime("%Y-%m-%d")
+                except Exception:
+                    file_date = today_str
+            return file_date != today_str
+        except Exception:
+            return False
+
+    def load(self, allow_expired: bool = False) -> Optional[Dict[str, Any]]:
+        """Đọc state.json. Trả về dict hoặc None nếu không có hoặc đã qua ngày mới."""
+        if not self.state_file.exists():
+            return None
+        if not allow_expired and self.is_expired():
+            logger.info("Checkpoint state.json đã qua ngày mới, tự động reset.")
+            self.clear()
             return None
         try:
             with open(self.state_file, "r", encoding="utf-8") as f:

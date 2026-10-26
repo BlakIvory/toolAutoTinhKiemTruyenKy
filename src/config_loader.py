@@ -78,6 +78,14 @@ class LoggingConfig(BaseModel):
     retention: str = "7 days"
 
 
+class CommerceOptimizationConfig(BaseModel):
+    abandon_combat_immediately: bool = True
+    quest_timeout_minutes: int = 15
+    use_nearest_commerce_chief: bool = True
+    return_via_xa_phu: bool = True
+    fast_dialog_delays: bool = True
+
+
 class AppConfig(BaseModel):
     emulator: EmulatorConfig
     adb: ADBConfig
@@ -87,6 +95,7 @@ class AppConfig(BaseModel):
     retry: RetryConfig = Field(default_factory=RetryConfig)
     mode: ModeConfig = Field(default_factory=ModeConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    commerce_optimization: CommerceOptimizationConfig = Field(default_factory=CommerceOptimizationConfig)
 
 
 # ---------------------------
@@ -295,8 +304,8 @@ class ConfigLoader:
             logger.info(f"Loaded shops.yaml: {len(self._shops.shops)} shop(s)")
         return self._shops
 
-    def load_ui_coords(self) -> Dict[str, Any]:
-        if self._ui_coords is None:
+    def load_ui_coords(self, reload: bool = False) -> Dict[str, Any]:
+        if self._ui_coords is None or reload:
             self._ui_coords = self._load_yaml("ui_coordinates.yaml")
             logger.info("Loaded ui_coordinates.yaml OK")
         return self._ui_coords

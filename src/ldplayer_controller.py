@@ -80,6 +80,8 @@ class LDPlayerController:
 
         # 3. Các đường dẫn phổ biến
         common = [
+            Path("D:/LDPlayer/LDPlayer14/ldconsole.exe"),
+            Path("C:/LDPlayer/LDPlayer14/ldconsole.exe"),
             Path("D:/LDPlayer/LDPlayer9/ldconsole.exe"),
             Path("C:/LDPlayer/LDPlayer9/ldconsole.exe"),
             Path("C:/Program Files/LDPlayer/LDPlayer9/ldconsole.exe"),

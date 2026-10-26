@@ -190,6 +190,37 @@ class Database:
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """, (account_id, quest_type, result, map_name, npc, started_at, now, notes))
 
+    def get_today_completed_quests(self, account_id: str) -> int:
+        """Đếm số nhiệm vụ đã thực hiện (hoàn thành hoặc đã hủy) của tài khoản trong ngày hôm nay."""
+        today_prefix = datetime.now().strftime("%Y-%m-%d")
+        utc_today_prefix = datetime.utcnow().strftime("%Y-%m-%d")
+        try:
+            with self._conn() as conn:
+                row = conn.execute("""
+                    SELECT COUNT(*) FROM quest_history
+                    WHERE account_id=? AND (completed_at LIKE ? OR completed_at LIKE ?) AND result IN ('COMPLETED', 'ABANDONED')
+                """, (account_id, f"{today_prefix}%", f"{utc_today_prefix}%")).fetchone()
+                return int(row[0]) if row else 0
+        except Exception as e:
+            logger.debug(f"get_today_completed_quests error: {e}")
+            return 0
+
+    def get_today_completed_quests_by_username(self, username: str) -> int:
+        """Đếm số nhiệm vụ hoàn thành hôm nay theo username (phòng trường hợp account_id bị đổi)."""
+        try:
+            today_prefix = datetime.now().strftime("%Y-%m-%d")
+            utc_today_prefix = datetime.utcnow().strftime("%Y-%m-%d")
+            with self._conn() as conn:
+                row = conn.execute("""
+                    SELECT COUNT(*) FROM quest_history q
+                    JOIN accounts a ON q.account_id = a.id
+                    WHERE a.username=? AND (q.completed_at LIKE ? OR q.completed_at LIKE ?) AND q.result IN ('COMPLETED', 'ABANDONED')
+                """, (username, f"{today_prefix}%", f"{utc_today_prefix}%")).fetchone()
+                return int(row[0]) if row else 0
+        except Exception as e:
+            logger.debug(f"get_today_completed_quests_by_username error: {e}")
+            return 0
+
     # ============================
     # Gold Transfer
     # ============================
