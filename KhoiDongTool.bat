@@ -1,16 +1,11 @@
 @echo off
-chcp 65001 >nul
 cd /d "%~dp0"
-title Auto Tinh Kiem Truyen Ky
-echo ========================================================
-echo       DANG KHOI DONG AUTO TINH KIEM TRUYEN KY...
-echo ========================================================
 
-set PYTHON_CMD="C:\Users\nguye\AppData\Local\Programs\Python\Python311\python.exe"
+set PYTHONW_CMD="C:\Users\nguye\AppData\Local\Programs\Python\Python311\pythonw.exe"
 
-if exist %PYTHON_CMD% (
-    start "" %PYTHON_CMD% launcher.py
+if exist %PYTHONW_CMD% (
+    start "" %PYTHONW_CMD% launcher.py
 ) else (
-    start "" python launcher.py
+    start "" pythonw launcher.py 2>nul || start "" python launcher.py
 )
 exit
